@@ -427,7 +427,9 @@ YOLO는 모든 요소를 **Regression(회귀)**으로 학습시킨다.
 
 ### 7.1 Bounding Box Loss
 객체가 존재하는 셀($\mathbb{1}_{ij}^{obj}$)에 대해서만 좌표와 크기 오차를 계산한다.
+
 $$\lambda_{coord} \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{1}_{ij}^{obj} \left[ (x_i - \hat{x}_i)^2 + (y_i - \hat{y}_i)^2 \right]$$
+
 $$\lambda_{coord} \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{1}_{ij}^{obj} \left[ (\sqrt{w_i} - \sqrt{\hat{w}_i})^2 + (\sqrt{h_i} - \sqrt{\hat{h}_i})^2 \right]$$
 - **왜 $\sqrt{w}, \sqrt{h}$인가?**: 큰 박스보다 작은 박스에서의 오차를 더 민감하게 반영하기 위함이다.
 
