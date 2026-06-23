@@ -24,6 +24,7 @@
 ## 1. Sequential Data — 왜 RNN인가
 
 지금까지의 supervised learning은 단일 이미지 입력 → class 예측이었다. 그러나 입력이 **순서가 있는 시퀀스** $x_1, \dots, x_n$ 인 경우가 많다.
+<img width="759" height="425" alt="image" src="https://github.com/user-attachments/assets/0fea5029-032f-4da7-a836-5e6b948eb07a" />
 
 **시퀀스 데이터 예시**
 - 비디오 (프레임의 연속) — 순서를 뒤집거나 섞으면 의미가 완전히 달라짐
@@ -32,6 +33,7 @@
 - 기상 데이터 (태풍 경로 예측 등)
 
 → 이런 데이터는 입력을 **IID로 가정할 수 없다.** 순서를 살려서 모델링해야 하며, CNN으로는 잘 안 된다.
+<img width="755" height="421" alt="image" src="https://github.com/user-attachments/assets/b27dd1de-6965-4931-a66e-6d62cd1a2975" />
 
 ### 출력 y도 시퀀스일까? → 문제 정의에 따라 다르다
 - **매일 피해량 예측** (1일차, 2일차 … 값을 매번 예측) → y도 시퀀스
@@ -46,7 +48,8 @@
 - 로보틱스 — 액션, 명령, 관측 이미지가 모두 실시간 시퀀스로 들어옴 (latency 계산이 어려운 문제)
 
 ---
-
+<img width="756" height="424" alt="image" src="https://github.com/user-attachments/assets/e7ca4f2e-27a4-4fa6-ad1f-671a647b8afd" />
+<img width="754" height="425" alt="image" src="https://github.com/user-attachments/assets/8221e9f9-d431-4f21-80e5-2f74a51093b3" />
 ## 2. 입출력 구조 4가지
 
 | 유형 | 설명 | 예시 |
@@ -61,6 +64,7 @@
 ---
 
 ## 3. RNN 동작 원리
+<img width="760" height="431" alt="image" src="https://github.com/user-attachments/assets/cd2cc647-57c8-43fa-9e5e-99a167b90464" />
 
 ### 기본 아이디어
 - 시퀀스 입력을 **하나씩** 받는다.
@@ -89,7 +93,7 @@ $$
 
 **Unrolling**: $h_0 \to (x_1) \to h_1 \to (x_2) \to h_2 \to \cdots \to h_T$
 $h_T$ 는 $x_1 \dots x_T$ 전체 내용을 담고 있어야 한다.
-
+<img width="755" height="425" alt="image" src="https://github.com/user-attachments/assets/2ef82168-ed0e-42f1-8090-3ccdf0ef657e" />
 ### ⭐ 핵심: 가중치 공유 (weight sharing)
 **모든 스텝에서 같은 $W_{hh}, W_{xh}$ 를 사용한다.** (스텝마다 다른 값을 쓰지 않음)
 
@@ -101,6 +105,7 @@ $h_T$ 는 $x_1 \dots x_T$ 전체 내용을 담고 있어야 한다.
 ---
 
 ## 4. 출력층 — $W_{hy}$
+<img width="755" height="425" alt="image" src="https://github.com/user-attachments/assets/a020e864-30f3-4c00-ac6d-fd3cf06ad30f" />
 
 hidden state에서 출력 y로 보내는 가중치 $W_{hy}$ 를 추가.
 
@@ -118,6 +123,7 @@ hidden state에서 출력 y로 보내는 가중치 $W_{hy}$ 를 추가.
 ---
 
 ## 5. 학습 — Backpropagation Through Time (BPTT)
+<img width="755" height="424" alt="image" src="https://github.com/user-attachments/assets/053993bc-cf2e-40a8-8cf2-c9a7463c2261" />
 
 - 정답도 시퀀스로 주어짐 ($y_1, y_2, y_3, \dots$).
 - 각 스텝의 예측과 정답을 비교 → loss 발생.
@@ -129,6 +135,7 @@ hidden state에서 출력 y로 보내는 가중치 $W_{hy}$ 를 추가.
 ---
 
 ## 6. Autoregressive Decoding (One-to-Many)
+<img width="760" height="425" alt="image" src="https://github.com/user-attachments/assets/559e4c9e-8730-49e3-ad77-60c1a8d2aecf" />
 
 이미지 1장 → 설명 문장 생성(captioning)을 생각해보자.
 - 이미지를 넣어 hidden state를 만든 뒤, 첫 단어를 출력.
@@ -145,6 +152,7 @@ $$ y_2 \text{ 생성 시 } y_1 \text{ 입력}, \quad y_3 \text{ 생성 시 } y_2
 ---
 
 ## 7. Seq2Seq (Encoder–Decoder, 1:1 매칭 안 되는 Many-to-Many)
+<img width="760" height="426" alt="image" src="https://github.com/user-attachments/assets/65a77b5f-d356-4562-a979-0e036777593c" />
 
 대표 예시: **동시통역.** 한국어를 들으면서 단어마다 영어를 내뱉을 수 없다(어순이 다름). 문장 정도 들은 뒤 이해하고 영어로 생성.
 
@@ -175,6 +183,7 @@ output, h_n = rnn(input, h_0)   # h_0 랜덤 초기화
 ---
 
 ## 9. RNN 장단점
+<img width="756" height="425" alt="image" src="https://github.com/user-attachments/assets/37f1c2ac-7e53-422d-a35e-5a2cba09a6da" />
 
 ### ✅ 장점
 1. **임의 길이 시퀀스 처리 가능**
@@ -191,6 +200,8 @@ output, h_n = rnn(input, h_0)   # h_0 랜덤 초기화
 ---
 
 ## 10. Vanishing / Exploding Gradient — 수학적 원인
+<img width="757" height="423" alt="image" src="https://github.com/user-attachments/assets/fd32023d-905c-4f6b-bc22-1e555d115ebd" />
+<img width="766" height="427" alt="image" src="https://github.com/user-attachments/assets/40cc44be-504f-4291-be94-6ff5f4fab395" />
 
 $h_t = \tanh(W_{hh} h_{t-1} + W_{xh} x_t)$ 에서, loss를 먼 과거의 hidden까지 역전파하려면 hidden 간 야코비안을 스텝 수만큼 연쇄적으로 곱해야 한다. 한 스텝의 야코비안은:
 
@@ -221,6 +232,9 @@ $$
 ---
 
 ## 11. LSTM (Long Short-Term Memory)
+<img width="763" height="427" alt="image" src="https://github.com/user-attachments/assets/31d2898d-c642-475b-938c-6758214569dd" />
+<img width="759" height="426" alt="image" src="https://github.com/user-attachments/assets/ef8d3c52-acfe-4680-b02b-dd00a55069ce" />
+<img width="761" height="427" alt="image" src="https://github.com/user-attachments/assets/2d98d0d9-cbcc-4b07-ae79-022fcfb6674b" />
 
 > 딥러닝 이전부터 있던 오래된 모델. 목적: vanishing gradient를 완화하고 **long-term memory를 더 잘 보존**.
 
@@ -264,6 +278,7 @@ $$
 ---
 
 ## 12. GRU (Gated Recurrent Unit, 2014)
+<img width="758" height="422" alt="image" src="https://github.com/user-attachments/assets/733c0c20-936a-438a-b9ec-4affef766133" />
 
 LSTM과 철학은 같지만(RNN + 장기기억) 더 단순화:
 
@@ -308,6 +323,7 @@ $$
 ---
 
 ## 13. 실전 가이드 & 정리
+<img width="757" height="428" alt="image" src="https://github.com/user-attachments/assets/260e7e63-2cc6-4235-9ebb-44f46d625ca1" />
 
 ```python
 # RNN을 쓸 거면 nn.RNN은 절대 쓰지 않는다. 항상 LSTM 또는 GRU.
