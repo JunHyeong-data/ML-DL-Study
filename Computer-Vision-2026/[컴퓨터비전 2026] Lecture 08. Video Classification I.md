@@ -24,10 +24,14 @@
 ## 2. Task & Application
 
 ### 2.1 Video Classification (Action Recognition)
+<img width="757" height="427" alt="image" src="https://github.com/user-attachments/assets/08fe9505-1268-41b9-a710-085ae0741b1c" />
+
 - 이미지 분류 = object recognition (어떤 **물체**가 있나). 보통 "이미지당 메인 객체 1개" 가정.
 - 비디오 분류 = **object + action**. 같은 장소·사람이라도 "수영장"이 아니라 "수영(swimming)"이라는 **액션**을 맞히는 것이 목적. → 한 장만 봐도 알 수 있는 문제는 일부러 피하고, 레이블 자체를 액션 중심으로 설계.
 
 ### 2.2 Video Retrieval (검색)
+<img width="760" height="425" alt="image" src="https://github.com/user-attachments/assets/29bf34ef-bde6-4a49-bd05-2d5c318093d7" />
+
 커리(query)가 무엇이냐에 따라 이름이 갈린다.
 - **텍스트 → 비디오**: 일반적인 비디오 검색. 기존엔 메타데이터(제목·설명) 의존 → "알고리즘 타려고" 낚시성 제목 문제 → **영상 내용 자체**를 이해해 검색하려는 동기.
 - **비디오 → 비디오 (Watch Next)**: 지금 보는 영상 다음에 뭘 볼지. 추천 성격.
@@ -35,24 +39,35 @@
 - 영상이 길어질수록 액션 하나하나보다 **topicality(주제성)** — "이 영상은 왜 보는가"의 요약 — 이 중요해진다.
 
 ### 2.3 Recommendation
+<img width="755" height="428" alt="image" src="https://github.com/user-attachments/assets/623297be-b588-4419-8147-213d455306bf" />
+
 - 검색과의 핵심 차이 = **personalization**. 검색은 누가 하든 같은 커리 → 같은 결과(객관). 추천은 **유저 자신이 커리** → 프로필·현재 컨텍스트(시간대, 디바이스 등)까지 고려.
 - 유튜브 예: 홈 화면 추천(현재 영상 무관) vs Watch Next(현재 영상 기반). 주제 관련성만 줄지, 일반 취향도 섞을지 비율 연구.
 
 ### 2.4 Video QA (VideoQA)
+<img width="759" height="425" alt="image" src="https://github.com/user-attachments/assets/1cfd0594-5c2f-40a7-8274-2df386fec7c4" />
+
 - 이미지 VQA → 비디오 VQA. 비디오만의 차이: **모션/액션 + 소리(음성)**. 소리는 음성→텍스트 변환이 가능해 **멀티모달**이 된다.
 - 어떤 질문은 화면을, 어떤 질문은 음성을, 어떤 질문은 둘 다 봐야 답이 나옴 → 난이도 급상승. **현재 LLM이 유독 약한 영역**(긴 비디오를 프레임 단위로 다 넣어 처리하는 게 계산량 때문에 어려움).
 
 ### 2.5 Video Prediction
+<img width="760" height="424" alt="image" src="https://github.com/user-attachments/assets/e922b02e-e662-492e-b9e5-10a2e730c13d" />
+
 - 과거 프레임으로 미래를 **픽셀 단위로 그려내기**. 시간이 갈수록 품질 저하.
 - 실생활 영상보다 **기상 예측**에 유용: 위성/관측 변수(기온·습도·풍향 등)를 임베딩해 RGB처럼 취급 → 물리 법칙을 몰라도 패턴으로 태풍 진로 등 예측.
 
 ### 2.6 Video Compression (배경 상식)
+<img width="755" height="424" alt="image" src="https://github.com/user-attachments/assets/2e08bab9-c857-4a27-92da-de690c076294" />
+
 - 무압축에 가까운 저장: 프레임을 픽셀 단위로 다 저장(**BMP** 비트맵) → 그걸 이어붙인 게 **AVI** → 용량 폭발.
 - **JPEG/MPEG**: 사람 눈엔 거의 차이 없게 대부분 정보를 버려 용량을 크게 줄임(예시 수치는 강의자 임의 예시). 특히 비디오는 **인접 프레임이 거의 같은 픽셀**이라 압축 이득이 큼.
 
 ---
 
 ## 3. Video가 어려운 이유 (Challenges)
+<img width="756" height="422" alt="image" src="https://github.com/user-attachments/assets/83fd0a5a-dea3-428e-b49b-06a400186a22" />
+<img width="758" height="423" alt="image" src="https://github.com/user-attachments/assets/b0dfc352-db78-4d7e-8009-31b7f60fc4b4" />
+<img width="758" height="428" alt="image" src="https://github.com/user-attachments/assets/49b7d544-d70f-4201-b824-560e042100ad" />
 
 모든 문제가 **"용량이 크고 정보량이 많다"** 라는 한 가지 사실에서 파생된다.
 
@@ -74,22 +89,32 @@
 > 이하에서 "비디오"는 대부분 **1~2초짜리 짧은 클립**(예: 32프레임). 장면 전환 없이 한 사람이 단순 액션을 하는 상황을 가정.
 
 ### 4.1 Baseline — Single Frame
+<img width="757" height="427" alt="image" src="https://github.com/user-attachments/assets/98edbd44-010f-43c0-a6ae-c2f85a966304" />
+
 - 프레임 1장 뽑아 2D CNN 돌리기. 추가 학습 불필요, 이미지로 학습한 것 그대로 사용 가능.
 - 의외로 어느 정도 됨(정지 장면만 봐도 피겨스케이팅인지 알 수 있는 것과 같음). → 이걸 **이기는 것**이 이후 목표.
 
 ### 4.2 Multi-Frame — 무엇을, 언제 합칠까
+<img width="755" height="428" alt="image" src="https://github.com/user-attachments/assets/2055e3f3-94b6-44e0-8765-350491df68d8" />
 
 **(A) 무엇을 합치나: Score Fusion vs Feature Fusion**
+<img width="757" height="428" alt="image" src="https://github.com/user-attachments/assets/854059e5-977b-4656-8f01-607864d31ce6" />
+
 - **Score fusion(late)**: 프레임마다 독립적으로 스코어를 내고, 마지막에 average / max로 합침. 간단.
 - **Feature fusion**: 마지막에 스코어 내기 전, 프레임별 **임베딩(feature)** 을 먼저 합치고(평균/max 등) 그 위에 작은 NN을 얹어 전체 스코어 1개를 산출. 중간에서 합쳐도 됨.
 
 **(B) Frame-level feature를 합치는 연산**
+<img width="755" height="424" alt="image" src="https://github.com/user-attachments/assets/59a8d34f-ec9e-49ae-a169-e2425f5da4a6" />
+
 - **Element-wise max**: 각 임베딩 차원이 어떤 정보를 담는다고 보면, 프레임 A에서 높던 정보와 프레임 B에서 높던 정보를 둘 다 살림("이 정보도 저 정보도 있었다").
 - **Average**: 영상 전반에 걸쳐 나온 객체/장면은 평균이 높고, 잠깐 스친 건 낮음 → 주제적 요약에 가까움.
 - **Concatenate + FC**: 손실 없이 이어붙여 학습.
 - **Stack + 1×1 conv**: 프레임 수 $L$ 이 달라지면 concat 길이가 달라져 뒤 FC 학습이 어려움. 대신 같은 크기 임베딩을 쌓은 뒤 1×1 conv로 한 장으로 합치면 **$L$ 에 무관**하게 처리 가능.
 
 **(C) 언제 합치나: Late / Early / Slow Fusion** *(Karpathy et al., Sports-1M, 2014의 분류)*
+<img width="758" height="422" alt="image" src="https://github.com/user-attachments/assets/79928207-488a-40a1-b1bd-96d448b34a40" />
+<img width="754" height="420" alt="image" src="https://github.com/user-attachments/assets/7ab4358d-6d68-4a09-b157-01ccd3cce2b6" />
+
 - **Late fusion**: 각 프레임을 끝까지 처리(2D CNN) 후 마지막에 합침. max/average가 의미 있음(이미 추상적 feature이므로).
 - **Early fusion**: 초반에 합치고 그다음은 일반 CNN처럼 진행.
   - 구현: 프레임 한 장당 채널 3개(RGB)인데, 인접 $L$ 프레임의 채널을 **시간축으로 이어붙여 $3L$ 채널인 것처럼** 취급. 시간차가 작아 순서를 무시해도 정보 손실이 크지 않다는 가정. 이후엔 그냥 2D CNN.
