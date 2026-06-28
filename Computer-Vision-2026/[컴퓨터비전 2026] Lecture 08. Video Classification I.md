@@ -1,4 +1,4 @@
-<img width="760" height="430" alt="image" src="https://github.com/user-attachments/assets/af7afa0c-8c1e-4738-ab6e-210f0461d831" /># 8강 — Video Understanding (1) : Video Classification & Two-Stream
+# 8강 — Video Understanding (1) : Video Classification & Two-Stream
 
 > 7강까지(NN → CNN → RNN/LSTM)가 ImageNet 기반 이미지 인식의 역사 리뷰였다면, 8~9강은 **이미지가 아니라 시퀀스로 들어오는 비디오**를 다루는 컴퓨터비전 특화 주제다. RNN을 배운 이유가 사실 이 비디오 처리를 위해서였다.
 
