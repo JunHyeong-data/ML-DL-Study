@@ -1,4 +1,4 @@
-# 8강 — Video Understanding (1) : Video Classification & Two-Stream
+<img width="760" height="430" alt="image" src="https://github.com/user-attachments/assets/af7afa0c-8c1e-4738-ab6e-210f0461d831" /># 8강 — Video Understanding (1) : Video Classification & Two-Stream
 
 > 7강까지(NN → CNN → RNN/LSTM)가 ImageNet 기반 이미지 인식의 역사 리뷰였다면, 8~9강은 **이미지가 아니라 시퀀스로 들어오는 비디오**를 다루는 컴퓨터비전 특화 주제다. RNN을 배운 이유가 사실 이 비디오 처리를 위해서였다.
 
@@ -134,6 +134,8 @@
 
 ### 5.2 ConvLSTM *(Shi et al., 2015 — precipitation nowcasting)*
 **Conv(CNN) + LSTM(RNN)** 을 합쳐 spatio-temporal dynamics를 학습. FC-LSTM에서 딱 두 가지만 바뀜:
+<img width="760" height="431" alt="image" src="https://github.com/user-attachments/assets/ddb76253-fbd8-44e7-910e-9284fd310324" />
+<img width="752" height="425" alt="image" src="https://github.com/user-attachments/assets/2ed8ff4a-526e-4668-b234-d9ef252414db" />
 
 1. 입력/은닉이 **벡터가 아니라 2D feature map**. (RNN: input 10-dim, hidden 20-dim → ConvLSTM: input 7×7, hidden 9×9 식)
 2. 게이트의 가중치 곱($W, U$)이 **convolution($*$)** 으로 대체. (2D를 다루므로, 계산량도 절약)
@@ -157,6 +159,7 @@ $$
 
 ### 5.3 ConvGRU
 - 같은 아이디어를 GRU에 적용(곱을 convolution으로). "되면 논문" 식으로 빠르게 파생.
+<img width="761" height="428" alt="image" src="https://github.com/user-attachments/assets/b14f892b-f052-4b7e-8c5e-5322c9dfead7" />
 
 ### 5.4 Multi-layer (stacked) RNN 변형 — 입력 3개 받기
 - 일반 stacked RNN의 한 셀은 보통 2개를 받음:
@@ -169,6 +172,7 @@ $$
 ## 6. Two-Stream Networks *(Simonyan & Zisserman, 2014)*
 
 > 모던 video understanding의 **초석** 논문. 철학: **공간(spatial)** 정보와 **시간(temporal/motion)** 정보를 **따로** 배우자.
+<img width="764" height="425" alt="image" src="https://github.com/user-attachments/assets/2b0f88c3-f8bc-49d8-8317-40752fe71de8" />
 
 - **Spatial stream**: 프레임 **한 장(랜덤)** → 일반 2D CNN. (짧은 클립이라 장면·사람은 거의 안 변한다는 가정)
 - **Temporal stream**: 디테일은 버리고 **모션만** 담은 **optical flow** 를 입력으로 별도 CNN.
@@ -176,6 +180,9 @@ $$
 
 ### 6.1 Optical Flow
 > 정의(Horn & Schunck): *the distribution of apparent velocities of movement of brightness patterns in an image.*
+<img width="761" height="422" alt="image" src="https://github.com/user-attachments/assets/ba0b9f89-ad15-43f6-8ad7-4cc2a482924d" />
+<img width="763" height="425" alt="image" src="https://github.com/user-attachments/assets/14b6465c-ca75-4a96-bc2f-b9ab9956be7d" />
+<img width="756" height="425" alt="image" src="https://github.com/user-attachments/assets/939e700f-6412-4474-bd7e-051a40266f87" />
 
 연속한 두 프레임 $I_1, I_2$ 에서, $I_1$ 의 한 픽셀이 $I_2$ 에서 어느 위치로 갔는지를 나타내는 **displacement vector**.
 - 안 움직이면 $(0,0)$, 오른쪽으로 1픽셀이면 $(1,0)$ 같은 식.
@@ -195,6 +202,8 @@ $$
 - 핵심: spatial stream은 손댈 것 없음(2D CNN 그대로), temporal stream만 **첫 conv 입력 채널을 $2L$** 로 잡으면 그다음은 동일.
 
 ### 6.3 Two-Stream의 한계
+<img width="760" height="427" alt="image" src="https://github.com/user-attachments/assets/4cad96c6-3cd8-4cca-bef9-cc1974758b25" />
+
 1. **Long-range temporal 정보 없음** — spatial은 1장만 쓰니, 시각적으로 내용이 바뀌는 영상에선 안 뽑힌 프레임의 정보가 소실.
 2. **Label assignment 문제 (근본적 한계)**
    - 예: **멀리뛰기(long jump)** 영상. spatial용으로 랜덤 1장을 뽑는데, "달리는 장면"이 뽑히면 그 한 장만으론 사람도 멀리뛰기인지 그냥 달리기인지 구분 불가. 그런데 정답은 "long jump"라고 가르침 → 모델 입장에서 혼란. 긴 영상일수록 더 심각.
@@ -202,12 +211,16 @@ $$
 4. **스트림 분리 학습** — 시간·공간을 함께 보지 못하고 따로 학습/예측 후 단순 결합.
 
 ### 6.4 개선: Middle Fusion *(Feichtenhofer et al., 2016)*
+<img width="757" height="428" alt="image" src="https://github.com/user-attachments/assets/ea0fb04e-f64e-4be5-af2b-0739f334800d" />
+
 - 끝까지 따로 가지 말고 **중간(예: conv4)에서 합치자**. 레이블 맞추는 단계에선 공통 작업이 더 많으니까.
 - 두 타워의 구조를 **일부러 동일**하게 가져가 합치기 쉽게 함. conv4까지 따로 → element-wise 곱으로 결합 → 이후 공통 처리.
 - 효과: 성능은 크게 안 떨어지면서 **파라미터 대폭 감소**(무거운 후반 FC 타워 하나를 제거). 단, **너무 일찍 합치면 오히려 안 좋음** → 실험상 중간(conv4 부근)이 적절. (2016년)
   > 연도 감각: AlexNet 2012, ResNet 2015 → 비디오는 이미지보다 한 박자 늦게 따라옴.
 
 ### 6.5 개선: End-to-End (flow를 학습) *(Hidden Two-Stream, MotionNet 계열, 2017)*
+<img width="760" height="430" alt="image" src="https://github.com/user-attachments/assets/b7800b41-a9f8-4a13-85ad-a21d67815202" />
+
 - optical flow 사전 계산이 부담 → **flow 자체를 NN으로 생성**해 실시간/엔드투엔드 가능하게.
 - **MotionNet**: 인접 두 프레임 $I_1, I_2$ → CNN → optical flow $V$ 출력. 이걸 temporal stream에 연결.
 - 학습: 미리 뽑은 flow를 ground-truth로 supervised 학습도 가능하지만, 핵심 아이디어는 **재구성(reconstruction) 손실** —
