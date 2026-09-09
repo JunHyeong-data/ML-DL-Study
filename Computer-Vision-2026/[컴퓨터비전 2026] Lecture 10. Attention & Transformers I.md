@@ -46,6 +46,8 @@ Attention은 **Query(Q), Key(K), Value(V)** 세 입력을 받아 **Attention val
 2. **Softmax** → **attention coefficient** $\alpha_t = \mathrm{softmax}(e_t)$. 합이 1, 0~1 사이.
 3. **Attention value**: $\displaystyle A_t = \sum_{i=1}^{T} \alpha_{t,i}\, h_i$ (Value들의 가중합 = 가중 평균). 크기는 $H$.
 4. $A_t$ 와 $s_t$ 를 concat(크기 $2H$) → **FC로 다시 $H$ 로 축소** → autoregressive하게 다음 단어 진행.
+<img width="1434" height="795" alt="image" src="https://github.com/user-attachments/assets/e3fe0f78-5489-4071-8fd3-da359f8e0f2c" />
+<img width="1421" height="797" alt="image" src="https://github.com/user-attachments/assets/a0a31449-2881-4338-96d7-f29fe4551d06" />
 
 > 의미: 디코더 현재 상태($s_t$)를 기준으로 입력을 다시 훑어, **가장 관련 있는 부분을 가중합**해 함께 참고. 망각해도 다시 볼 수 있다.
 
@@ -55,6 +57,7 @@ Attention은 **Query(Q), Key(K), Value(V)** 세 입력을 받아 **Attention val
 ---
 
 ## 3. Visual Attention 예시 (공간에 적용)
+<img width="1420" height="791" alt="image" src="https://github.com/user-attachments/assets/5a74de49-b681-40ac-9d3c-35bba8120a21" />
 
 LSTM으로 비디오 액션을 프레임마다 분류하는 모델에 attention을 적용:
 - **Q** = LSTM의 직전 hidden representation(지금까지 본 영상 정보를 담은 벡터).
@@ -66,10 +69,13 @@ LSTM으로 비디오 액션을 프레임마다 분류하는 모델에 attention�
 - 틀렸을 때 원인도 힌트: diving으로 오분류 → 푸르스름한 **바닥**을 수영장으로 오해.
 
 > 시간 축 attention(2.1)과 차이는 **K/V를 무엇으로 쓰느냐**뿐. 같은 아이디어를 공간에 적용한 것.
+<img width="1432" height="797" alt="image" src="https://github.com/user-attachments/assets/c9c09fcc-84f4-40b0-b97f-dd5a1d1f8061" />
 
 ---
 
 ## 4. Word Embedding (짧게)
+<img width="1419" height="796" alt="image" src="https://github.com/user-attachments/assets/14b9381c-926d-44d3-89bd-49152bdcdbb9" />
+<img width="1421" height="797" alt="image" src="https://github.com/user-attachments/assets/12e59f1a-9567-4a70-a33a-868b231ab440" />
 
 단어를 유클리드 공간 벡터로 표현하되, **비슷한 의미는 가깝게, 다른 의미는 멀게**.
 - **Word2Vec (2013)**: 어떤 단어 기준으로 앞뒤(최대 $M$ 단어) 단어들을 맞추도록(skip-gram) 임베딩 학습. 텍스트의 동시 등장 빈도를 잘 표현하게.
@@ -81,6 +87,7 @@ LSTM으로 비디오 액션을 프레임마다 분류하는 모델에 attention�
 ## 5. Transformer 개요
 
 > "Attention is All You Need" (2017, Google). **어텐션만으로 전부 구현**하자는 철학.
+<img width="1427" height="794" alt="image" src="https://github.com/user-attachments/assets/a495868f-f1ba-4f72-9c80-9067519a508d" />
 
 **전제**: 입력은 작은 요소들(set/sequence)로 쪼개지고(문장→단어, 비디오→프레임), 요소들은 **유기적 관계**를 가진다.
 
@@ -92,6 +99,7 @@ $$
 q_i = W_Q x_i,\quad k_i = W_K x_i,\quad v_i = W_V x_i
 $$
 (보통 Q/K/V 차원은 입력보다 작게.)
+<img width="1420" height="799" alt="image" src="https://github.com/user-attachments/assets/33712ab6-0d10-4b8b-84d3-3e0703ee0257" />
 
 ### 5.2 Self-Attention 동작
 모든 토큰이 한 번씩 **주인공(Query)** 이 된다.
@@ -105,9 +113,30 @@ $$
 
 **예시(타이타닉)**: 재난 장면(회색)·로맨스 장면(분홍) 토큰이 한 시퀀스에 들어오면 상호작용 → 재난 토큰의 $z$ 에 분홍이 살짝 섞이는 식으로 변형.
 
+<img width="1417" height="796" alt="image" src="https://github.com/user-attachments/assets/1135f87d-2326-413f-a1cd-4aa201ea41b3" />
+<img width="1426" height="800" alt="image" src="https://github.com/user-attachments/assets/031f3a1b-601d-4dbb-923d-e3a2c009d7d4" />
+<img width="1426" height="792" alt="image" src="https://github.com/user-attachments/assets/83d724c6-6066-4f92-abf9-f0f782613afc" />
+
 ---
 
 ## 6. 기술 디테일
+
+<img width="1424" height="801" alt="image" src="https://github.com/user-attachments/assets/fb2bb5c4-aa3a-4384-8e50-116f82225d47" />
+<img width="1413" height="798" alt="image" src="https://github.com/user-attachments/assets/16e84953-8db6-4b6d-b7dc-3825bcf32fb3" />
+<img width="1424" height="801" alt="image" src="https://github.com/user-attachments/assets/9d337a71-da01-4bff-addf-e3f6f804dadb" />
+<img width="1431" height="802" alt="image" src="https://github.com/user-attachments/assets/1e0c7d88-07fc-4940-87b5-08dbd2345b06" />
+<img width="1418" height="795" alt="image" src="https://github.com/user-attachments/assets/a35df60a-9907-49f5-bca0-2a0ee73da060" />
+<img width="1429" height="800" alt="image" src="https://github.com/user-attachments/assets/e9f5c327-e644-484c-8636-861fe609cd8f" />
+<img width="1416" height="791" alt="image" src="https://github.com/user-attachments/assets/2a109983-62b0-4191-81b9-ba899484bed9" />
+<img width="1423" height="798" alt="image" src="https://github.com/user-attachments/assets/ae60c826-ca47-4122-8601-d6139b42b1b0" />
+<img width="1423" height="799" alt="image" src="https://github.com/user-attachments/assets/8d930fe0-9e0c-46b5-bb51-c0f6723e3a79" />
+<img width="1416" height="798" alt="image" src="https://github.com/user-attachments/assets/9d9500f0-0b52-47e4-b416-521af0389068" />
+<img width="1424" height="805" alt="image" src="https://github.com/user-attachments/assets/80f5e520-fc83-4268-8b35-f88760b9611c" />
+<img width="1424" height="798" alt="image" src="https://github.com/user-attachments/assets/2309baf1-41e0-4532-90cf-699544b043c5" />
+<img width="1420" height="801" alt="image" src="https://github.com/user-attachments/assets/fd0d0ae1-5d10-4c33-abb9-394774c9fbf8" />
+<img width="1417" height="799" alt="image" src="https://github.com/user-attachments/assets/7316e795-2db7-4894-b257-9cd0bf1e0ac8" />
+<img width="1426" height="798" alt="image" src="https://github.com/user-attachments/assets/f0a58bb9-8d28-449a-b060-9e3f030c4ce2" />
+<img width="1421" height="798" alt="image" src="https://github.com/user-attachments/assets/742e6b60-476f-4aa2-9031-3ae10b802ddf" />
 
 ### 6.1 Scaled Dot-Product Attention
 $$
