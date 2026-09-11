@@ -24,6 +24,7 @@
 3. **Segment embedding**: 첫 번째 문장(A)인지 두 번째 문장(B)인지.
 
 형식: `[CLS] 문장1 [SEP] 문장2 [SEP]`. `[CLS]`는 분류용 특수 토큰, `[SEP]`는 문장 구분자.
+<img width="655" height="368" alt="image" src="https://github.com/user-attachments/assets/6861b099-8fc9-4327-8134-6cf34d7e5314" />
 
 ### 1.2 사전학습 Task 1 — Masked Language Modeling (MLM)
 영어 빈칸 채우기 시험과 같은 발상(GPT의 근간이 된 핵심 아이디어).
@@ -31,10 +32,12 @@
 - **사전 전체(약 10만 단어)에 대한 확률 분포**를 출력하는 객관식 → 정답과 Cross-Entropy.
 - 복수 정답이 가능해도 동작하는 이유: 정확히 하나를 맞히는 게 아니라 **그 문맥에 들어갈 단어들의 확률 분포**를 배우는 것이기 때문. 여러 번 반복하며 들어갈 만한 단어는 확률↑, 안 되는 단어는 억제.
 - 구현 팁: 랜덤 15%라 마스크가 0개인 문장(로스 0)·너무 많은 문장이 생김(예외 처리 필요). 초반엔 정확도 0이 계속 찍히다가 단어 의미를 배우면 급상승(보통의 학습 곡선과 다름).
+<img width="658" height="367" alt="image" src="https://github.com/user-attachments/assets/1d07b0bb-d1a0-4e71-8cc8-c577b1219ece" />
 
 ### 1.3 사전학습 Task 2 — Next Sentence Prediction (NSP)
 - 두 문장을 **50% 연속(실제 이어진 문장) / 50% 랜덤**으로 주고, 이어지는 문장인지 **이진 분류**(`[CLS]` 토큰 위에서). 거시적 문장 관계 학습.
 - 논문은 ~98% 정확도, 꼭 필요하다고 주장. 그러나 **후속 연구에서 NSP는 없어도 거의 무방**(MLM만으로 충분)하다고 밝혀짐. 다만 이 "두 입력이 매치되냐" 아이디어는 **멀티모달(이미지-텍스트 매칭)** 에서 매우 유용하게 재등장.
+<img width="650" height="364" alt="image" src="https://github.com/user-attachments/assets/d1b4f712-1fcf-4968-8094-0a9b0f4b7504" />
 
 ---
 
@@ -52,6 +55,7 @@
    $$ z_0 = [\,x_{cls};\ x_p^1 E;\ \dots;\ x_p^N E\,] + E_{pos} $$
 4. 표준 **Transformer 인코더** 통과 → `[CLS]` 출력 위에 classifier.
    > 원조 Transformer와 미세 차이: ViT는 **LayerNorm을 먼저**(pre-LN) 적용.
+<img width="946" height="533" alt="image" src="https://github.com/user-attachments/assets/809c7be2-5a16-4ed0-aae5-b6d73eeb220c" />
 
 ### 2.2 비용 & Inductive Bias — ViT의 핵심 교훈
 - **거대 데이터에서만 CNN을 이김**. 작은 데이터/작은 모델에선 CNN(ResNet/BiT)이 더 나음. JFT-300M(구글 비공개) + TPUv3로 학습, **약 2,500 TPU-day**. (강의자 추정: ~$48만 ≈ 7억 원/1회 학습 — *illustrative*)
@@ -61,6 +65,8 @@
 - ViT는 self-attention으로 **모든 패치가 전체를 본다** → 편견 없이 데이터로부터 "멀리 있는 건 보통 안 중요"를 **스스로 깨달아야** 함 → 데이터·연산·시간 폭증.
 - 대신 **locality를 넘어선 hard case**(예: 태풍 추적처럼 멀리 떨어진 변수가 영향을 주는 경우)도 학습 가능. CNN은 멀리 못 보게 막아서 불가능.
 - **학습형 PE도 잘 배움**: PE 간 유사도를 그려 보면 같은 행/열이 높게 나오는 등 **2D 공간 구조를 스스로 학습**(1D 인덱스로만 줬는데도).
+<img width="655" height="367" alt="image" src="https://github.com/user-attachments/assets/21f83973-e36a-49ca-b061-f4d74e8c15ba" />
+<img width="654" height="368" alt="image" src="https://github.com/user-attachments/assets/2664f2dd-153f-4a02-876a-a93c6defe1ac" />
 
 ---
 
@@ -74,6 +80,9 @@
   - **Soft distillation**: student 분포 $Z_s$ 와 teacher 분포 $Z_t$ 의 **KL divergence** 최소화 + 정답 CE, $\lambda$ 로 비율 조절.
   - **Hard distillation**: teacher가 **argmax 정답 하나만** 제공, student가 그걸 맞춤(정답 절반 + teacher 라벨 절반). → **의외로 hard가 약간 더 좋음**(1~2%). (노이지한 분포를 덜 배워서일 가능성)
 - 관찰: distillation token과 class token은 **다른 걸 학습**(코사인 유사도 ~0.93, 1 아님). distilled 모델은 teacher(CNN)와 더 일치. student가 teacher를 **조금 능가(청출어람)** — ViT가 CNN의 locality 한계 너머를 추가로 배울 수 있는 capacity 때문으로 해석.
+<img width="653" height="371" alt="image" src="https://github.com/user-attachments/assets/461b75e5-a00d-41f8-9e64-8144be55ccb2" />
+<img width="655" height="367" alt="image" src="https://github.com/user-attachments/assets/4ec40252-19af-4a5c-adc6-82883be313fc" />
+<img width="653" height="368" alt="image" src="https://github.com/user-attachments/assets/77c3e6e0-c5cc-415b-ab81-a7c810c82db0" />
 
 ---
 
@@ -82,22 +91,28 @@
 > 이름 **Swin = Shifted Window**. (⚠️ 강의의 "Small Window"는 오류 — 검증 참고)
 
 ViT의 치명적 단점: 연산량 과다, 그리고 옆 픽셀이어도 **다른 패치로 갈리면 끝까지 상호작용 못 함**(반 바뀐 친구처럼).
+<img width="655" height="366" alt="image" src="https://github.com/user-attachments/assets/ba540e70-ddc6-4ce7-9cac-2c1108363f17" />
+<img width="658" height="365" alt="image" src="https://github.com/user-attachments/assets/99432665-9827-4945-b5cf-521aa4140c53" />
 
 ### (1) Local Window Attention
 전체가 아니라 **작은 윈도우(M×M, 예 M=2) 안에서만** contextualize → convolution의 locality 주입. 윈도우 안의 토큰끼리만 K/V로 사용.
+<img width="647" height="370" alt="image" src="https://github.com/user-attachments/assets/9bfdfb46-e55a-4b37-895a-f6d1ec5c2395" />
 
 ### (2) Hierarchical Structure (Patch Merging)
 - 처음엔 **4×4** 아주 작은 패치(작은 물체 포착) → 다음 단계에서 **2×2 토큰을 병합**: $C$ 차원 토큰 4개를 concat($4C$) → linear/MLP → **$2C$**. 공간 해상도 절반, 채널 2배.
 - 윈도우 크기 $M$ 은 고정, 토큰이 커질수록 더 넓은 영역을 보게 됨 → CNN처럼 **multi-scale**.
+<img width="652" height="366" alt="image" src="https://github.com/user-attachments/assets/27c97e39-1b92-42ff-80bb-4c765a044611" />
 
 ### (3) Shifted Window
 - 윈도우를 고정하면 경계 너머 패치끼리 못 섞임 → **번갈아 윈도우를 절반씩 shift**. 한 번은 일반 윈도우(W-MSA), 다음은 shifted 윈도우(SW-MSA) → 주변 8방향과 한 번씩 섞일 기회.
 - 경계의 빈 곳은 **cyclic shift + 마스킹**(디코더 마스킹처럼, 없는 부분은 attention에서 제외)으로 처리.
 - ⇒ Swin 블록은 **항상 짝수 쌍**(W-MSA + SW-MSA). 그래서 블록 수가 `(2, 2, 6, 2)` 처럼 모두 짝수.
+<img width="653" height="369" alt="image" src="https://github.com/user-attachments/assets/8bf7722f-3f00-41d2-ae26-65ee9c356a68" />
 
 ### (4) Relative Position Bias
 - 토큰 위치·크기가 일정치 않아 절대 위치 임베딩이 애매 → 모든 페어의 **상대 위치 bias** $B$ 를 학습. 윈도우 토큰 $M^2$ 개 → attention 행렬 $M^2\times M^2$.
 - 실제 필요한 건 **상대 거리**뿐이라 한 축당 $-(M{-}1)\sim(M{-}1)$, 즉 $2M-1$ 개 → $(2M-1)^2$ 개만 배워서 채워 넣음.
+<img width="656" height="369" alt="image" src="https://github.com/user-attachments/assets/28d266e6-694c-4db7-a433-02041e0cbe0b" />
 
 ### 4.1 아키텍처 & 연산량
 - Patch partition 4×4 → 패치당 $4\times4\times3=48$ 차원 → Stage1에서 linear로 $C$ → Swin blocks(크기 불변) → Patch merging으로 $H/8\times W/8,\ 2C$ → … 단계적으로 $4C, 8C$.
@@ -105,6 +120,8 @@ ViT의 치명적 단점: 연산량 과다, 그리고 옆 픽셀이어도 **다�
   $$ \Omega(\text{MSA}) = 4hwC^2 + 2(hw)^2 C, \qquad \Omega(\text{W-MSA}) = 4hwC^2 + 2M^2\,hw\,C $$
   - 앞 항($4hwC^2$, Q/K/V/출력 projection)은 동일.
   - 핵심은 뒤 항: 전역 attention의 $(hw)^2$ 가 윈도우에선 **$M^2\cdot hw$** 로. $hw$(예 수십~수백)는 크고 $M^2$(예 4)은 작아 **연산량 대폭 절감**.
+<img width="654" height="366" alt="image" src="https://github.com/user-attachments/assets/16dab755-0e12-4c6b-a18a-272cf641e1a4" />
+<img width="658" height="365" alt="image" src="https://github.com/user-attachments/assets/dfaffe17-f0d9-4087-b976-d8bda8d261f3" />
 
 ---
 
@@ -115,6 +132,8 @@ ViT의 치명적 단점: 연산량 과다, 그리고 옆 픽셀이어도 **다�
 - **① Convolutional Token Embedding**: ViT의 linear projection 대신 **convolution**으로 토큰 생성. 게다가 **overlapping**(겹치게) 봐서 인접 정보를 함께 임베딩. stride로 출력 크기를 줄여 **patch merging 없이** 단계적 다운샘플링(명시적 patch partition 없음 — CNN의 stride 기능 활용).
 - **② Convolutional Projection**: Q/K/V를 만드는 linear projection도 **convolution**으로(2D로 되돌려 conv). 
 - **Squeezed projection**: Q는 전체를 봐야 하니 덜 줄이고, **K/V는 stride를 키워 더 작게**(locality 덕에 부분만 봐도 됨) → 연산 절감.
+<img width="654" height="366" alt="image" src="https://github.com/user-attachments/assets/43289ce2-5b25-4521-8b9d-8773fc63a0ef" />
+<img width="656" height="370" alt="image" src="https://github.com/user-attachments/assets/8605b509-63ff-4834-b8d8-3d22e3499d76" />
 
 ---
 
