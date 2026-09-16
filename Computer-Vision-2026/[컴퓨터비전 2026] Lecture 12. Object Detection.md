@@ -17,6 +17,7 @@
 
 - **입력**: 이미지 1장. **출력**: 객체들의 **리스트**, 각 항목 = (클래스, bounding box, [confidence]).
 - 이미지당 객체 수가 가변 → 출력 길이 가변, 객체 간 **자연스러운 순서 없음**(평가 시 매칭 문제 발생).
+<img width="1424" height="797" alt="image" src="https://github.com/user-attachments/assets/3fec4af7-9d7e-4d55-a77e-0443db5ee7d5" />
 
 ### Bounding box 표기 (4개 숫자)
 1. **(x_min, y_min, x_max, y_max)**: 좌상단·우하단 좌표.
@@ -26,6 +27,7 @@
 ### 데이터셋
 - **Pascal VOC**: 20 클래스(과제용 소규모로 충분).
 - **MS COCO**: 80 클래스(사람이 가장 많음).
+<img width="1436" height="800" alt="image" src="https://github.com/user-attachments/assets/3d813afa-ddac-4e44-a14f-0ade467aa717" />
 
 ---
 
@@ -33,10 +35,12 @@
 
 ### 2.1 객체가 딱 1개라면
 CNN feature에서 ① classification(클래스 스코어, CE) + ② **localization**(중심·크기 4개 값 regression, L2) 두 로스를 함께. → 단순.
+<img width="1419" height="794" alt="image" src="https://github.com/user-attachments/assets/9fb6ab5c-7e68-4ca1-a14f-0dbab50be1d4" />
 
 ### 2.2 객체가 여러 개면 (근본 난점)
 - 정답이 박스 리스트 → 모델도 **박스 단위로** 클래스를 맞혀야 함("어디에 뭐가 있다"가 아니라 "이 박스가 차, 저 박스가 사람").
 - **가변 개수** 처리 + **순서 없는 예측-정답 매칭** + 초기 학습 시 로스 산정이 애매.
+<img width="1418" height="794" alt="image" src="https://github.com/user-attachments/assets/5e13b18d-c2f6-4a05-95aa-77dc56223f0b" />
 
 ### 2.3 무식한 방법
 **가능한 모든 박스**를 잘라 CNN 분류(+ "none" 클래스). → **연산량 폭발**(대부분 위치엔 객체 없음, 비효율).
@@ -46,6 +50,7 @@ CNN feature에서 ① classification(클래스 스코어, CE) + ② **localizati
 ## 3. 큰 분류: Proposal-based vs Proposal-free
 - **Proposal-based**: "여기 객체 있을 것 같다"는 박스(proposal)를 **명시적으로** 먼저 구한 뒤 처리(2-stage). 먼저 발전.
 - **Proposal-free**: proposal 없이 이미지에서 바로 검출(1-stage).
+<img width="1419" height="800" alt="image" src="https://github.com/user-attachments/assets/14a18c53-ce50-4117-94f2-bb62442d917f" />
 
 ---
 
@@ -58,6 +63,7 @@ CNN feature에서 ① classification(클래스 스코어, CE) + ② **localizati
 
 ### 4.1 Bounding Box Regression (중요 트릭)
 proposal $P=(P_x,P_y,P_w,P_h)$ 기준 **오프셋**을 예측(절대 좌표 직접 회귀는 너무 어려움):
+ 
 $$
 t_x = \frac{G_x - P_x}{P_w},\quad t_y = \frac{G_y - P_y}{P_h},\quad t_w = \log\frac{G_w}{P_w},\quad t_h = \log\frac{G_h}{P_h}
 $$
