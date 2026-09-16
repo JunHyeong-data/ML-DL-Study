@@ -60,6 +60,7 @@ CNN feature에서 ① classification(클래스 스코어, CE) + ② **localizati
 
 - **Stage 1 (Region Proposal)**: 당시 딥러닝이 막 태동(2013~14)해 proposal은 **전통적 방법(Selective Search)** 사용. 정밀도가 낮아 **이미지당 ~2,000개** 뽑음(객체를 놓치지 않으려). 한 장에 **~2초(길면 30초)**.
 - **Stage 2**: 각 proposal을 잘라 **같은 크기로 리사이즈** → **CNN(원 논문은 AlexNet; VGG 변형도 있음)** 에 넣어 클래스 분류(+ "background/none") + **bbox regression**.
+<img width="661" height="371" alt="image" src="https://github.com/user-attachments/assets/ef361926-44e5-4a68-8edd-0e54dfb1f67b" />
 
 ### 4.1 Bounding Box Regression (중요 트릭)
 proposal $P=(P_x,P_y,P_w,P_h)$ 기준 **오프셋**을 예측(절대 좌표 직접 회귀는 너무 어려움):
@@ -69,9 +70,11 @@ t_x = \frac{G_x - P_x}{P_w},\quad t_y = \frac{G_y - P_y}{P_h},\quad t_w = \log\f
 $$
 - 모델은 $d_x(P), d_y(P), d_w(P), d_h(P)$ 를 출력해 $t_*$ 와 회귀.
 - $P_w, P_h$ 로 **나눠 정규화**(이미지·proposal 크기 무관, scale-invariant) + **log/exp**(비율 1 근처의 좁은 범위를 넓게 펴서 학습 용이).
+<img width="659" height="369" alt="image" src="https://github.com/user-attachments/assets/2afb5435-ce96-48b7-9806-d52321bf9283" />
 
 ### 4.2 한계
 **2,000번의 forward pass**(잘라낸 패치마다 CNN) → 추론 비용 막대.
+<img width="952" height="533" alt="image" src="https://github.com/user-attachments/assets/73dd0e5a-cd6d-4d14-ab67-9a0dbb7c4d73" />
 
 ---
 
@@ -87,14 +90,18 @@ $$
 - 한계: proposal은 **여전히 외부 Selective Search**(~2초)에 의존.
 
 > **Mask R-CNN(곁가지)**: RoI Pooling의 snap 오정렬을 **bilinear interpolation(RoIAlign)** 으로 보정 → 더 정확. 주로 다음 시간 **segmentation**에서 활용.
+<img width="656" height="367" alt="image" src="https://github.com/user-attachments/assets/1a324551-b287-4094-a141-8821ec9b533f" />
+<img width="954" height="533" alt="image" src="https://github.com/user-attachments/assets/3a2b16ad-890a-432c-802b-04728de6fadf" />
 
 ---
 
 ## 6. Faster R-CNN (2015) — Region Proposal Network (RPN)
 
 > 마지막 병목인 proposal까지 **딥러닝(RPN)** 으로. ("Fastest"는 없음 — 이게 끝.)
+<img width="663" height="373" alt="image" src="https://github.com/user-attachments/assets/27cef480-9d34-447a-8708-bf21b41d3942" />
 
 ### 6.1 IoU (Intersection over Union)
+
 $$ \text{IoU} = \frac{\text{Area of Intersection}}{\text{Area of Union}} \in [0,1] $$
 완전 일치=1, 안 겹침=0. 두 박스의 겹침 정도 지표.
 
@@ -108,6 +115,8 @@ $$ \text{IoU} = \frac{\text{Area of Intersection}}{\text{Area of Union}} \in [0,
   - 모든 GT와 **IoU < 0.3** → **negative**
   - 그 사이(0.3~0.7) → **무시**(애매한 건 학습에 안 씀)
 - 출력: 위치당 **2K**(objectness) + **4K**(box 좌표).
+<img width="953" height="533" alt="image" src="https://github.com/user-attachments/assets/a18de4e8-c7e1-4d87-88f1-336ba7ae5d6b" />
+<img width="652" height="369" alt="image" src="https://github.com/user-attachments/assets/23e42a93-a2ad-4db2-a7d0-1b9aaeef0b85" />
 
 ### 6.3 Loss & 학습 디테일
 $$
@@ -118,6 +127,8 @@ $$
 - 회귀 로스는 **positive anchor에 대해서만**($p_i^{\ast}$ 곱). $\lambda$ 로 두 로스 균형.
 - anchor 대부분이 negative → **positive 최대한 사용, 나머지를 negative로 채워 미니배치 256개**(positive는 128 초과 안 하게).
 - **단계적(alternating) 학습**: RPN 먼저 → Fast R-CNN 부분 → fine-tune … (당시 end-to-end가 어려워. 리소스 부족 환경에선 지금도 유용한 트릭.)
+<img width="656" height="371" alt="image" src="https://github.com/user-attachments/assets/c2d1bf3f-453f-49ac-82b7-3a435702d111" />
+<img width="653" height="365" alt="image" src="https://github.com/user-attachments/assets/87a670cc-2eab-4a2f-bf8d-eddb5d11f851" />
 
 ---
 
