@@ -140,6 +140,10 @@ $$
 - 각 셀 예측: **B×5**(x, y, w, h, confidence) + **C**개 클래스 스코어.
   - Pascal VOC: $7\times7\times(2\times5 + 20) = 7\times7\times30$.
 - **NMS (Non-Maximum Suppression)**: greedy. confidence 가장 높은 박스부터 살리고, 그것과 **IoU > 0.5** 겹치는 박스 제거 → 반복.
+<img width="943" height="532" alt="image" src="https://github.com/user-attachments/assets/4fb78c04-627e-4246-bbde-b643462df094" />
+<img width="658" height="370" alt="image" src="https://github.com/user-attachments/assets/7f965fbf-8038-4537-93b9-efc1056b4233" />
+<img width="656" height="369" alt="image" src="https://github.com/user-attachments/assets/15603e8a-e73d-43aa-a894-f382607cf9aa" />
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/389cf02f-46b9-4c4f-a651-de6b8450428b" />
 
 ### 7.1 Loss (한 식에 위치+존재+클래스)
 $$
@@ -151,6 +155,7 @@ L = \ & \lambda_{coord} \sum_{\text{obj}} \left[ (x-\hat{x})^2 + (y-\hat{y})^2 +
 $$
 - $\sqrt{w},\sqrt{h}$: 큰 박스의 오차가 과대평가되지 않게.
 - $\lambda_{coord}$(좌표 강조, =5), $\lambda_{noobj}$(객체 없는 셀 약화, =0.5): negative가 훨씬 많아 그냥 두면 "다 없음"이 정답이 돼버리므로 균형.
+<img width="658" height="370" alt="image" src="https://github.com/user-attachments/assets/2762e440-813b-4698-8e98-ee60c4685ab1" />
 
 ### 7.2 특징 & 논문 작성 교훈
 - Fast R-CNN보다 **빠르지만 정확도는 떨어짐**. 단, **배경/객체 유무는 더 잘 맞히고**(false positive 적음), **위치(localization)는 덜 정확**.
@@ -167,6 +172,8 @@ $$
 - **여러 해상도 feature를 모두 사용**: 앞쪽(고해상도) feature → **작은 객체**, 뒤쪽(저해상도, 넓은 영역) feature → **큰 객체**.
 - Loss: localization(smooth L1, R-CNN식) + confidence(softmax CE + negative엔 background 스코어↑).
 - 정확도: YOLO보다 높음. 속도: 2-stage(Faster R-CNN)보다 빠름. *(YOLO와의 속도 우열은 검증 참고)*
+<img width="654" height="368" alt="image" src="https://github.com/user-attachments/assets/62fe6fd5-1fdc-44e4-8e20-fdcc94fb2094" />
+<img width="658" height="369" alt="image" src="https://github.com/user-attachments/assets/639d386c-f750-45a2-bfb7-0d053498c6e1" />
 
 ---
 
@@ -183,6 +190,10 @@ $$
 - **Loss — Bipartite Matching**: 예측 $N$개와 정답을 **1:1 최적 매칭(Hungarian)** → 가장 로스가 작은 조합으로 매칭한 뒤 그 기준으로 로스 계산/역전파. (순서 없는 집합 예측 문제 해결)
 - 분석: attention이 객체 **경계(boundary)** 를 많이 봄 → 위치를 잘 잡음. occlusion(가려짐)도 비교적 잘 처리.
 - **한계**: 작고 빽빽한 객체가 매우 많은 경우 검출이 약함.
+<img width="653" height="369" alt="image" src="https://github.com/user-attachments/assets/bb3217af-6a05-41bb-9149-ec8cd47ea1b5" />
+<img width="655" height="368" alt="image" src="https://github.com/user-attachments/assets/c3cc8728-cea1-417b-b101-896b1434be11" />
+<img width="655" height="368" alt="image" src="https://github.com/user-attachments/assets/94e0ed41-3a1a-4016-bcef-64a4e329164b" />
+<img width="653" height="370" alt="image" src="https://github.com/user-attachments/assets/2a1c4c41-311a-4d7a-939d-9d2504cbe6d2" />
 
 ---
 
