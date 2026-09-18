@@ -18,6 +18,7 @@
 - Instance Seg = Detection + Semantic Seg 결합 (박스 안에서 다시 픽셀 마스크)
 - Semantic: 소 두 마리 → 둘 다 "소" 픽셀 (구분 X)
 - Instance: 강아지 두 마리 → 서로 다른 개체로 분리 (구분 O), **모르는 객체는 아예 잡지 않음**
+<img width="658" height="372" alt="image" src="https://github.com/user-attachments/assets/a14389b4-9413-4e6f-ba3b-48bbeaa1e8d2" />
 
 ---
 
@@ -53,6 +54,10 @@
 - 앞부분(encoder): conv로 점진적으로 줄이며 패턴 학습 → 작은 feature
 - 뒷부분(decoder): **점진적으로 다시 업샘플링**하여 원래 크기의 segmentation map 출력
 - `H×W → H/4×W/4 → H/8×W/8 → ... → 다시 두 배씩 → H×W`
+<img width="656" height="367" alt="image" src="https://github.com/user-attachments/assets/95099cdd-04e8-45bb-9544-da9d0e596f01" />
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/8e557ee3-1cea-4b32-bc27-b401f878bf69" />
+<img width="653" height="368" alt="image" src="https://github.com/user-attachments/assets/95e571fb-6165-4a21-a173-1575938564c9" />
+<img width="658" height="369" alt="image" src="https://github.com/user-attachments/assets/d55cb3b4-dfa7-44fa-bdfb-568ae30b8b70" />
 
 ### 1.4 Upsampling 방법 (★★ 시험 단골)
 
@@ -65,6 +70,10 @@
 | **Bed of Nails (못 박힌 침상)** | 해당 자리에만 값을 쓰고 나머지는 0 (뾰족뾰족) |
 | **Max Unpooling** | encoder의 max pooling 때 **max였던 위치를 기억**, 업샘플 시 그 위치에 값 복원, 나머지 0. 단 **encoder/decoder가 대칭 구조여야** 함 |
 | **Transposed Convolution** | (아래 상세) 학습 가능한 일반화된 업샘플 |
+<img width="659" height="371" alt="image" src="https://github.com/user-attachments/assets/01acfa5a-95db-449d-a54b-218a8552a810" />
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/f5c1eeb9-0184-488e-bbe0-698b87c614fa" />
+<img width="654" height="370" alt="image" src="https://github.com/user-attachments/assets/f47d8937-351c-410b-8829-ff80cdf27752" />
+<img width="659" height="369" alt="image" src="https://github.com/user-attachments/assets/a2bae886-289d-4c13-a10b-0ee27fbdf760" />
 
 ### 1.5 Transposed Convolution (= Deconvolution = Upconvolution) ★★★
 
@@ -86,6 +95,8 @@
 
 > 전체 구조: 이미지 → (conv로 축소, encoder) → (transposed conv로 확대, decoder) → segmentation map.
 > 이것이 **Deconvolution Network** 의 기본 골격.
+<img width="654" height="368" alt="image" src="https://github.com/user-attachments/assets/53b6c7fc-a88c-48ef-933e-d683d5115b53" />
+<img width="654" height="367" alt="image" src="https://github.com/user-attachments/assets/607b6b49-0531-4f9e-b872-a5b566ef42e5" />
 
 ---
 
@@ -124,6 +135,10 @@ $$
 - (논문 기본값: $w_0 \approx 10$, $\sigma \approx 5$. 강의에선 $w_c, \sigma$ 생략하고 핵심만 설명)
 
 > **암기 포인트**: U-Net = encoder-decoder + **skip connection** + no/mirror padding + **경계 가중 손실**
+<img width="656" height="366" alt="image" src="https://github.com/user-attachments/assets/d8a6a6ae-c4fb-4d98-bc80-95aba9aa1e8f" />
+<img width="656" height="367" alt="image" src="https://github.com/user-attachments/assets/7bd6ec77-1958-4cd2-9ad8-c50085eba818" />
+<img width="659" height="368" alt="image" src="https://github.com/user-attachments/assets/dbfb3625-5af4-404e-ab03-1e7aadd53988" />
+<img width="657" height="370" alt="image" src="https://github.com/user-attachments/assets/f78fae6a-b702-49ee-adf0-782a10d37a6d" />
 
 ---
 
@@ -134,6 +149,9 @@ $$
 - Decoder: **트랜스포머를 쓰지 않음.** 기존 conv 기반의 **단순 업샘플링**으로 픽셀 레벨 복원
   - 패치 토큰은 패치 내부 픽셀 정보가 거의 없으므로(rough) 픽셀 레벨로 업샘플 필요
 - **역사적 의미**: arXiv **2020년 12월**, ViT 공개 약 **2개월 뒤**. "ViT를 세그멘테이션에 그냥 붙였더니 잘 되더라"가 메시지. decoder를 정교하게 설계할 시간이 없어 단순 업샘플만 함
+<img width="654" height="366" alt="image" src="https://github.com/user-attachments/assets/af129062-9c12-48af-ae80-7ba6f1455557" />
+<img width="653" height="365" alt="image" src="https://github.com/user-attachments/assets/b688c9bd-18c2-45dc-ada5-3a03f3e754f8" />
+<img width="653" height="368" alt="image" src="https://github.com/user-attachments/assets/4ede817c-3aab-4c9a-8ea5-04b92021c95d" />
 
 ### 3.2 Segmenter (Mask Transformer) ★★
 - Encoder: ViT 그대로
@@ -153,6 +171,9 @@ $$
 - 이 $N \times K$ 를 **원본 이미지 크기까지 업샘플** → 정답 segmentation map과 비교해 학습
 - 성능: 패치 크기 작을수록(16<32, 더 작게 8) 더 잘게 쪼개 정밀 → 정확도↑ (대신 연산량↑)
 - 본질: **DETR decoder를 이미지 도메인에 적용**한 것 (혁신적 아이디어라기보단 잘 설계해 적용)
+<img width="659" height="371" alt="image" src="https://github.com/user-attachments/assets/e55a6026-83a0-4cf9-823d-ad4fdc7bbaf9" />
+<img width="655" height="371" alt="image" src="https://github.com/user-attachments/assets/d3993e76-0e75-4602-a435-f72d4ba30972" />
+<img width="652" height="368" alt="image" src="https://github.com/user-attachments/assets/fa6a2f4b-31d4-4510-8676-9852529fd772" />
 
 ### 3.3 DPT (Dense Prediction Transformer) — Multi-resolution
 - 특징: **여러 해상도(multi-resolution)** 를 활용 (Swin의 patch merging과 유사한 발상)
@@ -163,6 +184,7 @@ $$
 - 응용: **Depth Estimation** (적외선 X, 카메라로부터의 거리 측정)
   - 가까우면 밝게, 멀면 어둡게 → 2D→3D reconstruction의 기반
   - 본질은 **segmentation과 같은 틀**: 출력이 입력과 같은 크기. 단 픽셀별 **classification이 아니라 regression**(거리값)
+<img width="652" height="366" alt="image" src="https://github.com/user-attachments/assets/8eafe6b8-9ba5-435e-bd51-5bcadb1b94aa" />
 
 > 참고로 강의에서 언급된 확장: **Referring Segmentation** (텍스트 쿼리로 "패스 받으려는 선수를 찾아라" → 해당 객체만 분할). 같은 사람을 외형/동작 등 다른 문장으로 묘사해도 같은 대상임을 학습시켜야 해서 어렵고 예외가 많음. (시험 범위 밖, LLM/멀티모달 이후 다룸)
 
@@ -201,6 +223,11 @@ $$
 - 가중 하이퍼파라미터로 각 항의 상대적 중요도 조절
 
 > **암기 포인트**: Mask R-CNN = Faster R-CNN + Mask branch / **RoIAlign** / mask는 **FCN(FC 금지)** / loss 3개($L_{cls}+L_{box}+L_{mask}$)
+<img width="656" height="371" alt="image" src="https://github.com/user-attachments/assets/f36bdc44-9601-40dc-ada4-7c69422874e3" />
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/1e14f011-d5cb-4013-9b81-b06d879386d5" />
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/f650f7f1-acbd-4323-ad61-75ac13f568e9" />
+<img width="660" height="368" alt="image" src="https://github.com/user-attachments/assets/c89c5530-6e5b-4a38-a823-7d454e1d203d" />
+<img width="653" height="371" alt="image" src="https://github.com/user-attachments/assets/531c28dc-1171-41f8-a69d-8667b187dd22" />
 
 ---
 
