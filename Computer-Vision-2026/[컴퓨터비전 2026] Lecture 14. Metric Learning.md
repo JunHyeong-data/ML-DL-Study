@@ -507,6 +507,8 @@ $$
 - 왜 하필 이 함수인지는 논문 참고 (이렇게 설계했을 때 가장 잘 됐다고 함)
 - **MNIST 결과**: 같은 숫자끼리 뭉침. 4와 9가 섞인 영역에는 실제로 **4인지 9인지 애매한 글씨**가 모여 있음 → 하드 레이블로 classification한 것과는 다른 성질
 - 정확한 레이블 없이 **상대적 관계만으로 contrast**를 처음 적용한 논문으로 소개됨
+<img width="1425" height="790" alt="image" src="https://github.com/user-attachments/assets/fadcabc1-cc5b-4a4e-b160-cf1f1fd2806d" />
+<img width="1418" height="800" alt="image" src="https://github.com/user-attachments/assets/c4d04b75-abf5-49db-993e-e7faed9a258a" />
 
 ### 6.3 동기: Softmax의 계산 문제 → Negative Sampling
 
@@ -533,11 +535,13 @@ $$
 > (보충) 수식으로 보면 $\partial L / \partial s_j = p(j \mid x) - \mathbf{1}(j = y)$ 이므로, 정답이 아닌 **모든** $j$에 대해 gradient가 0이 아니다.
 
 Word2vec 예시(수업 슬라이드): 문장 하나로 학습할 때마다 "zebra"라는 단어의 파라미터를 매번 업데이트해야 하나? 이미 확률이 0.001인데 그걸 계속 조금씩 더 줄이는 게 의미가 있나?
+<img width="1416" height="796" alt="image" src="https://github.com/user-attachments/assets/19b21673-14f7-4faf-ae56-16ac0ad8b2ce" />
 
 **해결: Negative Sampling**
 
 - 어차피 거의 다 0 → **오답이 될 만한 hard negative만 샘플링**해서 그것들만 찍어 누르자
 - ⭐ **Triplet loss에서 negative mining을 한 이유와 본질적으로 같은 욕구**
+<img width="1427" height="796" alt="image" src="https://github.com/user-attachments/assets/ea6dcc15-9b94-4f8b-8137-dabb881ae103" />
 
 ### 6.4 SimCLR (Chen, Kornblith, Norouzi, Hinton, 2020)
 
@@ -559,6 +563,7 @@ flowchart LR
     T2 --> XJ["x̃ⱼ"] --> FJ["Encoder f"] --> HJ["hⱼ"] --> GJ["Projection g"] --> ZJ["zⱼ"]
     ZI ---|"positive: similarity 최대화"| ZJ
 ```
+<img width="1433" height="797" alt="image" src="https://github.com/user-attachments/assets/58704401-fb83-45cb-955f-31481d5590a5" />
 
 **Loss (NT-Xent)**
 
@@ -582,6 +587,7 @@ $$
 | 레이블 | 상대적 관계 필요 | 불필요 |
 
 → Contrastive는 미니배치 전체를 negative로 쓰고, triplet은 그중 하나만 고른 것 → triplet이 special case
+<img width="1422" height="796" alt="image" src="https://github.com/user-attachments/assets/9c9d5095-d766-49bc-b215-e6e5c8974d4f" />
 
 ### 6.5 NCE — Noise Contrastive Estimation (Gutmann & Hyvärinen, 2010)
 
@@ -593,6 +599,7 @@ $$
 |---|---|---|
 | True pair | 중심 단어 + 주변에 함께 등장한 단어 | 같은 사람의 얼굴끼리 (원하는 대로 정의) |
 | Fake pair | 무작위로 묶은 쌍 | 무작위로 묶은 쌍 |
+<img width="1420" height="799" alt="image" src="https://github.com/user-attachments/assets/6f49092b-c7e0-48d9-af1e-739362741c92" />
 
 **설정**
 
@@ -600,6 +607,7 @@ $$
 - 가짜(노이즈) 분포 $p_n$ (무작위 쌍)에서 $N$개 샘플: $y_1, \dots, y_N$
 - 이 $M+N$개가 섞인 미니배치에서 각 샘플이 **진짜 분포에서 왔는지 가짜 분포에서 왔는지** 맞히기 → 클래스는 딱 2개 → **logistic regression**
 - 원래 클래스 수가 아무리 많아도 상관없음
+<img width="1420" height="794" alt="image" src="https://github.com/user-attachments/assets/16ac1f22-40f7-4095-8683-879a8ed9db71" />
 
 **수식**
 
@@ -634,6 +642,7 @@ $$
 > (보충) 원 논문의 일반형은 노이즈 비율 $\nu = N/M$을 넣어 $h = 1 / (1 + \nu \exp(-G))$로 쓴다. 위 식은 이를 단순화한 형태.
 
 > 교수님: 이 부분은 금방 듣고 이해할 수 있는 내용이 아니니 **논문을 꼭 읽어보라**. 뒤의 Multimodal Learning에서 이 개념을 활용한다.
+<img width="1418" height="799" alt="image" src="https://github.com/user-attachments/assets/4ed9d3f0-7598-471c-8481-56caba892489" />
 
 ### 6.6 Negative를 다루는 방식 비교
 
