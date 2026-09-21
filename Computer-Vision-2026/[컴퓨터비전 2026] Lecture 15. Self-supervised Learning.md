@@ -28,6 +28,8 @@
 - **Self-Supervised**: 레이블 *전혀 없음* → 데이터 내재 특성을 **자동으로 레이블화**해서 Supervised 방식으로 학습
 
 > SSL은 "학습 방식은 Supervised처럼, 풀고자 하는 문제는 Unsupervised처럼" — 두 가지가 혼합된 형태
+<img width="1427" height="803" alt="image" src="https://github.com/user-attachments/assets/daa8edb3-1ec0-4c48-b114-7827aa2e4a0c" />
+<img width="1414" height="801" alt="image" src="https://github.com/user-attachments/assets/72afe73a-6f10-406b-becc-106cbf426d3e" />
 
 ---
 
@@ -56,6 +58,10 @@
 **학습되는 것**: 패치 간 상대적 위치 관계(Relative Spatial Position) → 물체의 부위 구조 이해
 
 **결과**: 당시 다른 Self-Supervised 방법들 대비 우월, 그러나 Supervised Learning 대비 성능 열세
+<img width="1420" height="793" alt="image" src="https://github.com/user-attachments/assets/5eeee569-b108-4b08-bdba-bba5307e261a" />
+<img width="1418" height="796" alt="image" src="https://github.com/user-attachments/assets/b1f35a6f-5081-4a0d-a32d-65bf2eae1fec" />
+<img width="1422" height="799" alt="image" src="https://github.com/user-attachments/assets/2b687ea8-5b31-496e-87aa-81fcb49e2414" />
+<img width="1420" height="798" alt="image" src="https://github.com/user-attachments/assets/b0a8d4ba-0b04-4928-8aaa-cf7bd7adbcb0" />
 
 ---
 
@@ -87,6 +93,9 @@ RGB 대신 **CIE Lab** 색상 공간을 사용하는 이유:
 > **⚠️ [보충]** L2 Loss가 잘 안 되는 이유: 하나의 픽셀에 대해 여러 그럴듯한 색이 있을 때, L2는 모든 가능성의 평균인 회색을 예측하는 방향으로 수렴하는 "regression-to-the-mean" 문제 발생. Cross-Entropy + 색 양자화가 multimodal 분포를 더 잘 표현함.
 
 **목적**: 컬러화 자체가 아니라 → 앞단 **Encoder Feature를 다운스트림에 전이**
+<img width="1419" height="792" alt="image" src="https://github.com/user-attachments/assets/0d01f553-e211-4f61-adbd-503453be162c" />
+<img width="1423" height="800" alt="image" src="https://github.com/user-attachments/assets/36943395-bdbf-41f0-93ed-6e64ab59ff01" />
+<img width="1421" height="792" alt="image" src="https://github.com/user-attachments/assets/ab0ef3bc-a535-43eb-92a5-f9d1a55b36fa" />
 
 ---
 
@@ -101,6 +110,7 @@ RGB 대신 **CIE Lab** 색상 공간을 사용하는 이유:
 **핵심 전제**: 자연 이미지는 중력 방향을 기준으로 촬영됨 → 어느 것이 "위"인지를 맞추려면 물체의 구조를 이해해야 함
 
 **학습되는 것**: 물체의 방향성(Direction of Objects) — 얼굴·다리·창문·바퀴 등의 공간적 배치
+<img width="1421" height="792" alt="image" src="https://github.com/user-attachments/assets/48203855-a917-462e-a2b0-c212b8522dcb" />
 
 ---
 
@@ -108,6 +118,8 @@ RGB 대신 **CIE Lab** 색상 공간을 사용하는 이유:
 
 > **아이디어**: 같은 이미지에서 서로 다른 "View"(증강 또는 크롭)를 만들어, 두 View의 표현이 서로 유사해지도록 학습.  
 > Human label 없이 **"같은 이미지에서 나왔다"는 사실 자체**가 Pseudo-label 역할.
+<img width="1416" height="794" alt="image" src="https://github.com/user-attachments/assets/a69b4b6a-20bf-4e77-8064-ec86eeb5bd12" />
+<img width="1418" height="794" alt="image" src="https://github.com/user-attachments/assets/82cdc12d-e586-492e-be25-6b81ee7299f6" />
 
 ---
 
@@ -150,6 +162,11 @@ $$\theta_k \leftarrow m \cdot \theta_k + (1 - m) \cdot \theta_q$$
 > **⚠️ [보충]** MoCo v1은 End-to-End 및 Memory Bank 대비 딕셔너리 크기($K$)가 커질수록 성능이 지속 향상됨을 보임. $K=65536$에서 최고 성능.
 
 **SSL 분류 논점**: 논문은 "Unsupervised Learning"이라 표현하나, Positive/Negative 쌍 생성이 자동화된 Pseudo-label이므로 엄밀히는 **Self-Supervised Learning**에 더 가까움 (강의 교수님 견해 동의)
+<img width="1418" height="797" alt="image" src="https://github.com/user-attachments/assets/f799d4f3-95f1-4b13-8790-b16a96adda20" />
+<img width="1420" height="799" alt="image" src="https://github.com/user-attachments/assets/5c3e5484-f11a-4f11-af60-29b26195961b" />
+<img width="1419" height="797" alt="image" src="https://github.com/user-attachments/assets/9644b3a3-f468-4239-95a9-9d927d605d75" />
+<img width="1421" height="791" alt="image" src="https://github.com/user-attachments/assets/a6588748-7f94-4a91-8a8b-69f15a2b3ecf" />
+<img width="1415" height="797" alt="image" src="https://github.com/user-attachments/assets/1f035de0-f148-4ce7-9ebe-a637a1d8cebd" />
 
 ---
 
@@ -211,6 +228,12 @@ $$\mathcal{L} = 2 - 2 \cdot \frac{\langle \hat{z}, z' \rangle}{\|\hat{z}\| \cdot
 | Momentum Encoder | ✅ | ✅ (동일 구조) |
 
 **결과**: Supervised ViT에 거의 근접하는 성능 달성 (2020년 당시 Self-Supervised SOTA)
+<img width="1420" height="793" alt="image" src="https://github.com/user-attachments/assets/301756a9-7b67-4f8d-8823-d6c72be29493" />
+<img width="1417" height="798" alt="image" src="https://github.com/user-attachments/assets/21c9b715-25bb-4b9b-a19a-d3cda7993132" />
+<img width="1425" height="791" alt="image" src="https://github.com/user-attachments/assets/6698a2b6-eac5-453a-bf3c-d1da8084821c" />
+<img width="1413" height="792" alt="image" src="https://github.com/user-attachments/assets/151be42a-f233-4e4e-952b-2ef1baee7762" />
+<img width="1426" height="796" alt="image" src="https://github.com/user-attachments/assets/61b11b3d-c991-4eef-9b6f-9c3107f78942" />
+<img width="1419" height="788" alt="image" src="https://github.com/user-attachments/assets/ba720ea0-dfaa-4d15-8d28-8961d3d95415" />
 
 ---
 
@@ -275,6 +298,10 @@ $$c \leftarrow m \cdot c + (1 - m) \cdot \frac{1}{B}\sum_i g_{\theta_t}(x_i)$$
 - **경계선(Boundary) 및 저수준 피처 포착에 매우 강함**
 - Segmentation mask에 가까운 Attention map이 레이블 없이 학습됨
 - **kNN Classifier**만으로도 강력한 성능 (Linear Probing 이상)
+<img width="1431" height="796" alt="image" src="https://github.com/user-attachments/assets/8e3947fc-a657-46f9-a1e4-d587a88ea5a3" />
+<img width="1429" height="797" alt="image" src="https://github.com/user-attachments/assets/ccd2ded2-7ac1-4359-a364-1526cec55f01" />
+<img width="1422" height="796" alt="image" src="https://github.com/user-attachments/assets/a6397b2e-17ca-4e49-9ae9-f20abccc55f8" />
+<img width="1424" height="798" alt="image" src="https://github.com/user-attachments/assets/01481936-05bb-4ca3-84d1-a606ec3b760d" />
 
 ---
 
@@ -297,6 +324,8 @@ Loss: ||x - x̂||²
 - 최종 목적: **Encoder만 사용** — Decoder는 학습 보조 도구로만 사용 후 제거
 
 **한계**: 복원된 이미지가 흐릿(블러리), 최신 AI에서 단독으로 쓰기엔 성능 부족
+<img width="1413" height="803" alt="image" src="https://github.com/user-attachments/assets/59be2819-54cd-406f-80eb-6589fd4e8549" />
+<img width="1426" height="797" alt="image" src="https://github.com/user-attachments/assets/76f96992-5aef-407a-a148-67987de1eb5f" />
 
 ---
 
@@ -318,6 +347,8 @@ $$\tilde{x} \sim q(\tilde{x}|x), \quad \mathcal{L} = \|x - g(f(\tilde{x}))\|^2$$
 - 데이터 매니폴드에서 살짝 벗어난 점($\tilde{x}$)을 매니폴드 위($x$)로 되돌리는 방향 학습
 
 > **⚠️ [슬라이드 오류 수정]** 강의 중 "x_tilde(노이즈 있는 것)가 입력, x(원본)가 정답"이라고 말하면서 슬라이드 화살표가 반대로 그려져 있었음. 교수님 본인이 직접 정정: **x̃ → Encoder → Decoder → x 복원**이 정확한 방향. ✅
+<img width="1418" height="796" alt="image" src="https://github.com/user-attachments/assets/1723e12c-eb54-45a3-8649-e525715bdaed" />
+<img width="1421" height="796" alt="image" src="https://github.com/user-attachments/assets/54b91e2b-249d-4eb9-8476-befa8b3748ec" />
 
 ---
 
@@ -355,6 +386,11 @@ Loss: MSE (마스킹된 패치의 픽셀값)
 **결과**: **ViT의 Supervised 사전학습 성능을 Self-Supervised로 처음 초과** (ImageNet 83.1% 이상)
 
 **목적**: Encoder를 다운스트림에 전이. Decoder는 사용 후 제거.
+<img width="1429" height="801" alt="image" src="https://github.com/user-attachments/assets/a7732ac6-5957-4c3b-8bf7-184f8998cd2e" />
+<img width="1427" height="795" alt="image" src="https://github.com/user-attachments/assets/c6642633-17bb-4ef7-9569-5e195af295d4" />
+<img width="1425" height="798" alt="image" src="https://github.com/user-attachments/assets/02d73986-2847-41c3-b1ff-542aa3c00c70" />
+<img width="1422" height="803" alt="image" src="https://github.com/user-attachments/assets/d04cb633-c931-43d2-8437-7927a8b0efed" />
+<img width="1424" height="799" alt="image" src="https://github.com/user-attachments/assets/4d540c5b-e44d-4738-820b-8d0f5aea9312" />
 
 ---
 
@@ -410,6 +446,11 @@ $$\bar{\phi} \leftarrow \tau \bar{\phi} + (1-\tau)\theta$$
 - Hand-crafted Augmentation 불필요
 
 **확장**: VideoMAE, AudioMAE, MultiMAE, V-JEPA, V-JEPA 2 (로보틱스·Physical AI 적용)
+<img width="1413" height="792" alt="image" src="https://github.com/user-attachments/assets/af445611-e97b-4e92-b1c8-e907260c3627" />
+<img width="1419" height="793" alt="image" src="https://github.com/user-attachments/assets/061c6de2-766f-4046-88f9-e3f71a458c58" />
+<img width="1435" height="797" alt="image" src="https://github.com/user-attachments/assets/775da1f8-2be6-4078-a545-042fce17cf4e" />
+<img width="1423" height="798" alt="image" src="https://github.com/user-attachments/assets/549dde19-17c8-47ec-bb07-60bcb9a15546" />
+<img width="1426" height="797" alt="image" src="https://github.com/user-attachments/assets/a78c1342-7a89-4be0-af48-41464d9f2c38" />
 
 ---
 
