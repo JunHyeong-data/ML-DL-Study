@@ -56,6 +56,8 @@ Generative Models
     ├── GAN                        ← 다음 2강
     └── Diffusion                  ← 그 다음 2강
 ```
+<img width="656" height="371" alt="image" src="https://github.com/user-attachments/assets/64f14556-f591-434f-bc03-4b3995be4953" />
+<img width="655" height="368" alt="image" src="https://github.com/user-attachments/assets/e29b3ee8-3bf0-40d4-9f73-b430657f1c93" />
 
 ---
 
@@ -83,6 +85,8 @@ $$p(x_i) = p(x_i^R) \cdot p(x_i^G \mid x_i^R) \cdot p(x_i^B \mid x_i^R, x_i^G)$$
 - **확률 분포에서 Stochastic Sampling** ✅ → 다양한 출력 생성 가능
 
 ### 2-3. 세 가지 모델 변형
+<img width="656" height="371" alt="image" src="https://github.com/user-attachments/assets/e4cc43a7-d9ea-4c21-b77d-21761e93b35f" />
+<img width="659" height="367" alt="image" src="https://github.com/user-attachments/assets/593b6541-7c76-4fe1-9909-9d65c3ca7a1e" />
 
 ---
 
@@ -107,6 +111,7 @@ $$h_t = \text{LSTM}(x_t,\ h_{t-1}^{\text{위 줄 3칸}})$$
 ```
 
 이미 생성한 모든 픽셀을 조건으로 삼아야 하는 원칙에 위배.
+<img width="661" height="369" alt="image" src="https://github.com/user-attachments/assets/4682edfd-8db3-412e-a74c-9ec4a512df6d" />
 
 ---
 
@@ -122,6 +127,7 @@ $$h_t = \text{LSTM}(x_t,\ h_{t-1}^{\text{위 줄 3칸}})$$
 **병렬화**: 같은 대각선 위 픽셀들은 동시 계산 가능
 
 **구현 트릭**: 이미지를 한 칸씩 shift하여 위·왼쪽 픽셀을 인접하게 배치 → 일반 컨볼루션 필터로 처리 가능
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/fce8d7dd-5ccc-46ce-84d5-4cddb7eae02c" />
 
 ---
 
@@ -145,6 +151,7 @@ $$h_t = \text{LSTM}(x_t,\ h_{t-1}^{\text{위 줄 3칸}})$$
 **학습 시**: 정답 이미지 전체 알고 있음 → **모든 자리 병렬 학습 가능**
 
 **생성 시**: 아직 안 만들어진 부분 실제로 모름 → 순차 생성 필요 (병렬 불가)
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/4bda0f06-228e-49e3-8bae-94ba37251169" />
 
 ---
 
@@ -158,6 +165,7 @@ $$h_t = \text{LSTM}(x_t,\ h_{t-1}^{\text{위 줄 3칸}})$$
 | 미래 픽셀 | 포함 ❌ | 포함 ❌ |
 
 > **핵심**: 첫 레이어에서 실제 이미지 픽셀에 접근할 때만 A를 써서 "내가 맞혀야 하는 값을 미리 보는 것"을 방지.
+<img width="656" height="368" alt="image" src="https://github.com/user-attachments/assets/7471d13c-a74f-4f2c-b874-11fb99001add" />
 
 ---
 
@@ -181,6 +189,10 @@ $$p(y_i \mid y_{<i}, x) \propto \text{softmax}\!\left(h_A(x) + h_B(y_{<i})\right
 $$\mathcal{L} = -\sum_{i=1}^{M} \log p(y_i \mid y_{<i}, x)$$
 
 > **⚠️ [강의 노테이션 주의]** 이 논문에서 $y$=예측값, $y^*$=정답으로 일반적 관행과 반대. 혼동 주의.
+<img width="662" height="370" alt="image" src="https://github.com/user-attachments/assets/9a7d6284-48f5-4afd-afc0-7e59177818b6" />
+<img width="662" height="373" alt="image" src="https://github.com/user-attachments/assets/1b620c33-552a-4681-89cd-bb5ec8a968fe" />
+<img width="655" height="360" alt="image" src="https://github.com/user-attachments/assets/fe6b76d5-c16b-488a-a745-48b05569149e" />
+<img width="658" height="367" alt="image" src="https://github.com/user-attachments/assets/16146abb-eb53-4ade-ac36-ce197428e990" />
 
 ---
 
@@ -211,6 +223,8 @@ Input x → [Encoder] → z (bottleneck) → [Decoder] → x̂ ≈ x
 목적: 좋은 Encoder(표현 학습)를 얻기 위해 Decoder를 임시 부착
 핵심: Encoder가 필요 → Decoder는 수단
 ```
+<img width="662" height="371" alt="image" src="https://github.com/user-attachments/assets/fbf502c2-31a8-4cb5-ba33-d3fdc394f0c2" />
+<img width="658" height="368" alt="image" src="https://github.com/user-attachments/assets/b6b22d97-8ddc-417e-a971-9c77af60a3ed" />
 
 **VAE**:
 
@@ -222,6 +236,8 @@ Input x → [Encoder] → z (bottleneck) → [Decoder] → x̂ ≈ x
 > **⚠️ [중요 포인트]** 강의 핵심 구분:
 > - AE: "**인코더**를 원해서 디코더를 붙였다가 뗀다"
 > - VAE: "**디코더(생성기)**를 원해서 인코더를 붙였다가 뗀다"
+<img width="659" height="371" alt="image" src="https://github.com/user-attachments/assets/f14c564e-e708-474a-90cf-057de4ab7150" />
+<img width="657" height="368" alt="image" src="https://github.com/user-attachments/assets/0b5285d2-0dd1-497f-925d-680afc2bed4b" />
 
 ---
 
@@ -233,6 +249,8 @@ Input x → [Encoder] → z (bottleneck) → [Decoder] → x̂ ≈ x
 → 임의 벡터 $z$를 넣으면 학습 데이터 분포 밖 → **쓰레기 이미지** 생성
 
 **근본 원인**: $p(z)$ (latent space 분포)에 아무런 제약이 없어서 의미 있는 구조가 형성되지 않음
+<img width="657" height="369" alt="image" src="https://github.com/user-attachments/assets/e0c6752f-d2f8-4a15-9840-6a19bd603387" />
+<img width="660" height="372" alt="image" src="https://github.com/user-attachments/assets/f5eeeb17-8b8f-41bf-8131-54861d53c553" />
 
 ---
 
@@ -248,6 +266,7 @@ $z$가 데이터의 의미 구조를 잘 반영하는 분포를 갖도록 → �
 
 → z를 이 분포에서 샘플링하면 올바른 이미지가 나와야 함
 ```
+<img width="661" height="370" alt="image" src="https://github.com/user-attachments/assets/822b19c4-688e-4947-99a6-a9ffa5946556" />
 
 ---
 
@@ -271,6 +290,7 @@ $$\log p(x) = \underbrace{\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x \mid z)]}_{\t
 $$\mathcal{L}(\theta,\phi;\,x) = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x \mid z)] - D_{KL}(q_\phi(z|x) \| p(z))$$
 
 **이것을 최대화** (= Loss로는 음수 취해 최소화)
+<img width="662" height="369" alt="image" src="https://github.com/user-attachments/assets/e4615f20-59e5-4196-98c2-bade63c6ac81" />
 
 ---
 
@@ -290,6 +310,8 @@ $$\mathcal{L}_{VAE} = \underbrace{-\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x \mid
 $$D_{KL}\!\left(\mathcal{N}(\mu, \sigma^2) \| \mathcal{N}(0, I)\right) = \frac{1}{2}\sum_j \left(\mu_j^2 + \sigma_j^2 - \log \sigma_j^2 - 1\right)$$
 
 > **⚠️ [강의 보충]** 강의에서 KL term을 "L2 regularization처럼 생겼다"고 설명 — 직관적으로 맞음. $\mu^2 + \sigma^2$ 항이 파라미터를 0 근처에 머물도록 강제하는 효과.
+<img width="657" height="369" alt="image" src="https://github.com/user-attachments/assets/4699f3a9-f16f-4183-b55d-041a82d465b2" />
+<img width="655" height="366" alt="image" src="https://github.com/user-attachments/assets/9b32c510-6161-4cb2-948b-bbc9b793fbcc" />
 
 ---
 
@@ -300,6 +322,7 @@ $$D_{KL}\!\left(\mathcal{N}(\mu, \sigma^2) \| \mathcal{N}(0, I)\right) = \frac{1
 - $z$가 모든 정보를 담을 필요 없음
 - **Decoder $p_\theta(x \mid z)$가 복잡한 매핑을 학습**해서 $z$를 적절히 해석
 - "어떤 $z$를 어떤 이미지로 바꿀지"를 Decoder가 전담
+<img width="659" height="373" alt="image" src="https://github.com/user-attachments/assets/981bce6a-0985-47b7-940b-01eb05d9c335" />
 
 ---
 
@@ -346,6 +369,7 @@ z ~ N(0, I)  ← 임의 샘플링
   - 세로축: 표정 없음(위) ↔ 웃음(아래)
   - 가로축: 오른쪽 바라봄(왼쪽) ↔ 왼쪽 바라봄(오른쪽)
 - 데이터의 가장 중요한 변동 요인을 **자동으로** 발견
+<img width="654" height="367" alt="image" src="https://github.com/user-attachments/assets/6b2bac1d-1d06-4585-af25-f34d8119b0ed" />
 
 ---
 
@@ -363,6 +387,7 @@ z ~ N(0, I)  ← 임의 샘플링
 - MSE는 지각적 유사도(Perceptual Similarity)와 다름 → 흐릿한 이미지 생성
 
 > **⚠️ [강의 연결]** 강의 초반에 보여준 그림: "픽셀 MSE가 같아도 사람 눈에는 다르게 보일 수 있다" → VAE의 블러리 문제의 근본 원인.
+<img width="659" height="371" alt="image" src="https://github.com/user-attachments/assets/4931b35e-4045-4fb4-a795-dd25c35b3daa" />
 
 ---
 
